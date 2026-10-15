@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Brain, ShieldAlert, Route as RouteIcon, Sparkles as _s, BarChart3, Briefcase } from "lucide-react";
+import { Brain, ShieldAlert, Route as RouteIcon, BarChart3, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AGENTS } from "@/lib/agents";
 import { useAuth } from "@/hooks/useAuth";
@@ -15,7 +15,6 @@ export const Route = createFileRoute("/")({
   }),
   component: Landing,
 });
-void _s;
 
 const FEATURES = [
   { icon: ShieldAlert, title: "Early risk warning", text: "A machine-learning model flags academic risk from marks, attendance and backlogs — before results day." },
