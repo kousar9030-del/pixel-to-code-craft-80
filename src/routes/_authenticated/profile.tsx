@@ -42,7 +42,7 @@ function Profile() {
     if (x) setP({ full_name: x.full_name ?? "", college: x.college ?? "", branch: x.branch ?? "", current_semester: String(x.current_semester ?? 1), active_backlogs: String(x.active_backlogs ?? 0), overall_attendance: String(x.overall_attendance ?? 0), skills: (x.skills ?? []).join(", "), placement_goal: x.placement_goal ?? "" });
   }, [q.data?.profile]);
 
-  async function saveProfile() {
+  async function saveProfile(): Promise<unknown> {
     const sem = num(p.current_semester, 1, 12), bl = num(p.active_backlogs, 0, 50), att = num(p.overall_attendance, 0, 100);
     if (!p.full_name.trim()) return toast.error("Name is required");
     if (sem === null || bl === null || att === null) return toast.error("Semester 1–12, backlogs 0–50, attendance 0–100");
@@ -54,7 +54,7 @@ function Profile() {
   }
 
   const [sem, setSem] = useState({ semester: "", sgpa: "" });
-  async function addSem() {
+  async function addSem(): Promise<unknown> {
     const s = num(sem.semester, 1, 12), g = num(sem.sgpa, 0, 10);
     if (s === null || g === null) return toast.error("Semester 1–12 and SGPA 0–10");
     const { error } = await supabase.from("semesters").upsert({ user_id: user!.id, semester: s, sgpa: g }, { onConflict: "user_id,semester" });
@@ -65,7 +65,7 @@ function Profile() {
   }
 
   const [sub, setSub] = useState({ semester: "", name: "", marks: "", attendance: "", is_backlog: false });
-  async function addSub() {
+  async function addSub(): Promise<unknown> {
     const s = num(sub.semester, 1, 12), m = num(sub.marks, 0, 100), a = num(sub.attendance, 0, 100);
     if (!sub.name.trim()) return toast.error("Subject name is required");
     if (s === null || m === null || a === null) return toast.error("Semester 1–12, marks and attendance 0–100");
@@ -76,7 +76,7 @@ function Profile() {
     refresh();
   }
 
-  async function del(id: string) {
+  async function del(id: string): Promise<unknown> {
     const { error } = await supabase.from("subjects").delete().eq("id", id);
     if (error) return toast.error(error.message);
     refresh();

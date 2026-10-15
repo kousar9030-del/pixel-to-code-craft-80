@@ -68,7 +68,7 @@ export function toRiskInput(d: StudentData): RiskInput {
   const backlogs = Math.max(Number(d.profile?.active_backlogs ?? 0), d.subjects.filter((s) => s.is_backlog).length);
   const sg = d.semesters.map((s) => s.sgpa);
   const cgpa = avg(sg);
-  const sgpaTrend = sg.length >= 2 ? sg[sg.length - 1] - sg[sg.length - 2] : 0;
+  const sgpaTrend = sg.length >= 2 ? sg[sg.length - 1]! - sg[sg.length - 2]! : 0;
   return { avgMarks, attendance, backlogs, cgpa, sgpaTrend };
 }
 

@@ -44,7 +44,7 @@ export const runAgent = createServerFn({ method: "POST" })
         .map(([k, v]) => `${k}: ${v}`)
         .join("\n") + studentContext;
     try {
-      const text = await generate(SYSTEM[data.agentId], prompt || "Please help me.");
+      const text = await generate(SYSTEM[data.agentId]!, prompt || "Please help me.");
       await supabase.from("activities").insert({ user_id: userId, kind: "agent", title: `Used ${data.agentId} agent` });
       return { ok: true as const, text };
     } catch (e) {

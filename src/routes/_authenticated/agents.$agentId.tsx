@@ -71,7 +71,7 @@ function AgentPage() {
               {f.type === "textarea" ? (
                 <Textarea rows={5} placeholder={f.placeholder} value={inputs[f.name] ?? ""} onChange={(e) => setInputs({ ...inputs, [f.name]: e.target.value })} />
               ) : f.type === "select" ? (
-                <Select value={inputs[f.name]} onValueChange={(v) => setInputs({ ...inputs, [f.name]: v })}>
+                <Select value={inputs[f.name] ?? ""} onValueChange={(v) => setInputs({ ...inputs, [f.name]: v })}>
                   <SelectTrigger><SelectValue placeholder="Choose…" /></SelectTrigger>
                   <SelectContent>{f.options!.map((o) => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
                 </Select>

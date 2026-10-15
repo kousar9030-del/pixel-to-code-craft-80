@@ -90,9 +90,9 @@ export function trainModel(): TrainedModel {
   const split = Math.floor(X.length * 0.8);
   const rows = X.map((x) => KEYS.map((k) => x[k]));
   const train = rows.slice(0, split);
-  const mean = KEYS.map((_, j) => train.reduce((s, r) => s + r[j], 0) / train.length);
-  const std = KEYS.map((_, j) => Math.sqrt(train.reduce((s, r) => s + (r[j] - mean[j]) ** 2, 0) / train.length) || 1);
-  const norm = rows.map((r) => r.map((v, j) => (v - mean[j]) / std[j]));
+  const mean = KEYS.map((_, j) => train.reduce((s, r) => s + r[j]!, 0) / train.length);
+  const std = KEYS.map((_, j) => Math.sqrt(train.reduce((s, r) => s + (r[j]! - mean[j]!) ** 2, 0) / train.length) || 1);
+  const norm = rows.map((r) => r.map((v, j) => (v - mean[j]!) / std[j]!));
   const w = new Array(KEYS.length).fill(0);
   let b = 0;
   const lr = 0.3;
@@ -100,9 +100,9 @@ export function trainModel(): TrainedModel {
     const gw = new Array(KEYS.length).fill(0);
     let gb = 0;
     for (let i = 0; i < split; i++) {
-      const p = sigmoid(norm[i].reduce((s, v, j) => s + v * w[j], b));
-      const e = p - y[i];
-      norm[i].forEach((v, j) => (gw[j] += e * v));
+      const p = sigmoid(norm[i]!.reduce((s, v, j) => s + v * w[j], b));
+      const e = p - y[i]!;
+      norm[i]!.forEach((v, j) => (gw[j] += e * v));
       gb += e;
     }
     for (let j = 0; j < w.length; j++) w[j] -= (lr * (gw[j] / split + 0.001 * w[j]));
@@ -112,9 +112,9 @@ export function trainModel(): TrainedModel {
   const scores: number[] = [];
   const labels: number[] = [];
   for (let i = split; i < X.length; i++) {
-    const p = sigmoid(norm[i].reduce((s, v, j) => s + v * w[j], b));
+    const p = sigmoid(norm[i]!.reduce((s, v, j) => s + v * w[j], b));
     scores.push(p);
-    labels.push(y[i]);
+    labels.push(y[i]!);
     const pred = p >= 0.5 ? 1 : 0;
     if (pred && y[i]) tp++;
     else if (pred && !y[i]) fp++;
@@ -150,11 +150,11 @@ export type RiskLevel = "Low" | "Moderate" | "High" | "Critical";
 
 export function predictRisk(input: RiskInput) {
   const m = getModel();
-  const z = KEYS.map((k, j) => ((input[k] - m.mean[j]) / m.std[j]) * m.weights[j]);
+  const z = KEYS.map((k, j) => ((input[k] - m.mean[j]!) / m.std[j]!) * m.weights[j]!);
   const probability = sigmoid(z.reduce((a, c) => a + c, m.bias));
   const level: RiskLevel =
     probability < 0.25 ? "Low" : probability < 0.5 ? "Moderate" : probability < 0.75 ? "High" : "Critical";
-  const factors = KEYS.map((k, j) => ({ key: k, label: FEATURE_LABELS[k], value: input[k], contribution: z[j] }))
+  const factors = KEYS.map((k, j) => ({ key: k, label: FEATURE_LABELS[k], value: input[k], contribution: z[j]! }))
     .sort((a, b) => Math.abs(b.contribution) - Math.abs(a.contribution));
   return { probability, level, factors };
 }

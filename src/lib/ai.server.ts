@@ -38,7 +38,7 @@ export async function generate(instructions: string, prompt: string): Promise<st
       },
     },
   });
-  const text = await result.text.catch((e) => {
+  const text = await Promise.resolve(result.text).catch((e: unknown) => {
     streamError ??= e;
     return "";
   });
