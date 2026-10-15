@@ -99,7 +99,7 @@ function SimRow({ label, v, min, max, step = 1, on }: { label: string; v: number
   return (
     <div>
       <div className="mb-2 flex justify-between text-sm"><span>{label}</span><span className="text-accent">{v.toFixed(step < 1 ? 1 : 0)}</span></div>
-      <Slider value={[v]} min={min} max={max} step={step} onValueChange={([x]) => on(x)} />
+      <Slider value={[v]} min={min} max={max} step={step} onValueChange={([x]) => on(x ?? v)} />
     </div>
   );
 }

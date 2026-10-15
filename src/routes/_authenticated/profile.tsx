@@ -42,43 +42,43 @@ function Profile() {
     if (x) setP({ full_name: x.full_name ?? "", college: x.college ?? "", branch: x.branch ?? "", current_semester: String(x.current_semester ?? 1), active_backlogs: String(x.active_backlogs ?? 0), overall_attendance: String(x.overall_attendance ?? 0), skills: (x.skills ?? []).join(", "), placement_goal: x.placement_goal ?? "" });
   }, [q.data?.profile]);
 
-  async function saveProfile(): Promise<unknown> {
+  async function saveProfile() {
     const sem = num(p.current_semester, 1, 12), bl = num(p.active_backlogs, 0, 50), att = num(p.overall_attendance, 0, 100);
-    if (!p.full_name.trim()) return toast.error("Name is required");
-    if (sem === null || bl === null || att === null) return toast.error("Semester 1–12, backlogs 0–50, attendance 0–100");
+    if (!p.full_name.trim()) { toast.error("Name is required"); return; }
+    if (sem === null || bl === null || att === null) { toast.error("Semester 1–12, backlogs 0–50, attendance 0–100"); return; }
     const { error } = await supabase.from("profiles").upsert({ id: user!.id, full_name: p.full_name.trim(), college: p.college.trim(), branch: p.branch.trim(), current_semester: sem, active_backlogs: bl, overall_attendance: att, skills: p.skills.split(",").map((s) => s.trim()).filter(Boolean), placement_goal: p.placement_goal.trim(), updated_at: new Date().toISOString() });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await log("Updated profile");
     toast.success("Profile saved");
     refresh();
   }
 
   const [sem, setSem] = useState({ semester: "", sgpa: "" });
-  async function addSem(): Promise<unknown> {
+  async function addSem() {
     const s = num(sem.semester, 1, 12), g = num(sem.sgpa, 0, 10);
-    if (s === null || g === null) return toast.error("Semester 1–12 and SGPA 0–10");
+    if (s === null || g === null) { toast.error("Semester 1–12 and SGPA 0–10"); return; }
     const { error } = await supabase.from("semesters").upsert({ user_id: user!.id, semester: s, sgpa: g }, { onConflict: "user_id,semester" });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await log(`Saved SGPA for semester ${s}`);
     setSem({ semester: "", sgpa: "" });
     refresh();
   }
 
   const [sub, setSub] = useState({ semester: "", name: "", marks: "", attendance: "", is_backlog: false });
-  async function addSub(): Promise<unknown> {
+  async function addSub() {
     const s = num(sub.semester, 1, 12), m = num(sub.marks, 0, 100), a = num(sub.attendance, 0, 100);
-    if (!sub.name.trim()) return toast.error("Subject name is required");
-    if (s === null || m === null || a === null) return toast.error("Semester 1–12, marks and attendance 0–100");
+    if (!sub.name.trim()) { toast.error("Subject name is required"); return; }
+    if (s === null || m === null || a === null) { toast.error("Semester 1–12, marks and attendance 0–100"); return; }
     const { error } = await supabase.from("subjects").insert({ user_id: user!.id, semester: s, name: sub.name.trim(), marks: m, attendance: a, is_backlog: sub.is_backlog });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await log(`Added subject ${sub.name.trim()}`);
     setSub({ semester: sub.semester, name: "", marks: "", attendance: "", is_backlog: false });
     refresh();
   }
 
-  async function del(id: string): Promise<unknown> {
+  async function del(id: string) {
     const { error } = await supabase.from("subjects").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     refresh();
   }
 
