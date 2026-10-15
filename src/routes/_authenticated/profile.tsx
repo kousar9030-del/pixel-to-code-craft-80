@@ -76,8 +76,8 @@ function Profile() {
     refresh();
   }
 
-  async function del(table: "semesters" | "subjects", id: string) {
-    const { error } = await supabase.from(table).delete().eq("id", id);
+  async function del(id: string) {
+    const { error } = await supabase.from("subjects").delete().eq("id", id);
     if (error) return toast.error(error.message);
     refresh();
   }
@@ -108,11 +108,9 @@ function Profile() {
           <Button onClick={addSem}><Plus /> Save</Button>
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
-          {q.data?.semesters.length ? q.data.semesters.map((s) => {
-            const row = s as { id?: string; semester: number; sgpa: number };
-            return <span key={s.semester} className="rounded-lg bg-secondary px-3 py-1.5 text-sm">Sem {s.semester}: <b>{s.sgpa}</b></span>;
-            void row;
-          }) : <p className="text-sm text-muted-foreground">No semesters yet.</p>}
+          {q.data?.semesters.length ? q.data.semesters.map((s) => (
+            <span key={s.semester} className="rounded-lg bg-secondary px-3 py-1.5 text-sm">Sem {s.semester}: <b>{s.sgpa}</b></span>
+          )) : <p className="text-sm text-muted-foreground">No semesters yet.</p>}
         </div>
       </Card>
 
@@ -129,7 +127,7 @@ function Profile() {
           {q.data?.subjects.length ? q.data.subjects.map((s) => (
             <div key={s.id} className="flex items-center justify-between py-2 text-sm">
               <span>Sem {s.semester} · <b>{s.name}</b> · {s.marks} marks · {s.attendance}% {s.is_backlog && <span className="ml-1 rounded bg-destructive/20 px-1.5 text-xs text-destructive">backlog</span>}</span>
-              <Button size="icon" variant="ghost" aria-label="Delete subject" onClick={() => del("subjects", s.id!)}><Trash2 /></Button>
+              <Button size="icon" variant="ghost" aria-label="Delete subject" onClick={() => del(s.id!)}><Trash2 /></Button>
             </div>
           )) : <p className="text-sm text-muted-foreground">No subjects yet.</p>}
         </div>
