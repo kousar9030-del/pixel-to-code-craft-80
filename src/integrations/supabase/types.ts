@@ -14,7 +14,129 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      activities: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          active_backlogs: number
+          branch: string
+          college: string
+          created_at: string
+          current_semester: number
+          full_name: string
+          id: string
+          overall_attendance: number
+          placement_goal: string
+          skills: string[]
+          updated_at: string
+        }
+        Insert: {
+          active_backlogs?: number
+          branch?: string
+          college?: string
+          created_at?: string
+          current_semester?: number
+          full_name?: string
+          id: string
+          overall_attendance?: number
+          placement_goal?: string
+          skills?: string[]
+          updated_at?: string
+        }
+        Update: {
+          active_backlogs?: number
+          branch?: string
+          college?: string
+          created_at?: string
+          current_semester?: number
+          full_name?: string
+          id?: string
+          overall_attendance?: number
+          placement_goal?: string
+          skills?: string[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      semesters: {
+        Row: {
+          created_at: string
+          id: string
+          semester: number
+          sgpa: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          semester: number
+          sgpa: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          semester?: number
+          sgpa?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      subjects: {
+        Row: {
+          attendance: number
+          created_at: string
+          id: string
+          is_backlog: boolean
+          marks: number
+          name: string
+          semester: number
+          user_id: string
+        }
+        Insert: {
+          attendance: number
+          created_at?: string
+          id?: string
+          is_backlog?: boolean
+          marks: number
+          name: string
+          semester: number
+          user_id: string
+        }
+        Update: {
+          attendance?: number
+          created_at?: string
+          id?: string
+          is_backlog?: boolean
+          marks?: number
+          name?: string
+          semester?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
